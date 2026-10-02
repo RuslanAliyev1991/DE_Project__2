@@ -1,0 +1,16 @@
+services:
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase_container
+    hostname: metabase
+    volumes:
+      - /dev/urandom:/dev/random:ro
+    ports:
+      - 3000:3000
+    networks:
+      - networkRealTimeStreaming
+      
+networks:
+  networkRealTimeStreaming:
+    name: networkRealTimeStreaming_project2
+    external: true

@@ -1,0 +1,33 @@
+services:  
+  postgres_source:
+    image: ${POSTGRES_IMAGE}
+    container_name: postgres_s
+    environment: 
+      POSTGRES_DB: ${POSTGRES_SOURCE_DB} 
+      POSTGRES_USER: ${POSTGRES_SOURCE_USER} 
+      POSTGRES_PASSWORD: ${POSTGRES_SOURCE_PASSWORD}
+    env_file: .env
+    ports:
+      - "5433:5432"
+    volumes:
+      - source_pg_data_RealTime:/var/lib/postgresql/data
+      - ./sql/init-source.sql:/docker-entrypoint-initdb.d
+      #- ./potgres/pg_files:/files
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_SOURCE_USER} -d ${POSTGRES_SOURCE_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - networkRealTimeStreaming
+    restart: always
+  
+
+volumes:
+  source_pg_data_RealTime:
+    name: airflowRealTimeStreaming_project2_source_data
+
+networks:
+  networkRealTimeStreaming:
+    name: networkRealTimeStreaming_project2
+    external: true
